@@ -68,6 +68,9 @@ namespace The_Sorting_Hat
                 MessageBox.Show("Sorting was completed");
 
                 SortingProgressBar.Value = -1;
+
+                CancelSortingBtn.IsEnabled = false;
+                StartSortingBtn.IsEnabled = true;
             }
         }
 
