@@ -4,9 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:The_Sorting_Hat"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="MainWindow" Height="250" Width="400">
+    <StackPanel>
+        <TextBlock FontWeight="ExtraBold" TextAlignment="Center" TextDecorations="Underline" FontSize="13" Margin="3">The Sorting Hat</TextBlock>
+
+        <StackPanel Orientation="Horizontal" Margin="10,0,10,3">
+            <TextBlock VerticalAlignment="Center">Please choose a filepath to a folder:</TextBlock>
+            <Button Name="SourceDirectoryFolderSelectionBtn" Click="SourceDirectoryFolderSelectionBtn_Click" Margin="5">Click to Select Folder</Button>
+            <xctk:IntegerUpDown Name="NumberOfPosition" DefaultValue="54" DisplayDefaultValueOnEmptyText="True" Margin="3"></xctk:IntegerUpDown>
+        </StackPanel>
+
+        <TextBlock Margin="10,0,10,0">Source Directory Path:</TextBlock>
+        <TextBox Name="SourceDirectoryPathTextBox" IsReadOnly="True" Margin="10,0,10,0"></TextBox>
+
+        <Button Name="StartSortingBtn" Click="StartSortingBtn_Click" Margin="10">Click to Start Sorting</Button>
+
+        <Button Name="CancelSortingBtn" Click="CancelSortingBtn_Click" Margin="10" IsEnabled="False">Cancel</Button>
+
+        <ProgressBar Minimum ="0" Maximum ="100" Name="SortingProgressBar" Margin="10" Height="18"></ProgressBar>
+    </StackPanel>
 </Window>

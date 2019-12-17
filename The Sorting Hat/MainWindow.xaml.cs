@@ -24,5 +24,25 @@ namespace The_Sorting_Hat
         {
             InitializeComponent();
         }
+
+        private void SourceDictionaryFolderSelectionBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SourceDirectoryFolderSelectionBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void StartSortingBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CancelSortingBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
