@@ -182,6 +182,14 @@ namespace The_Sorting_Hat
         {
             totalPositions = (int)NumberOfPosition.Value;
             folderPosition = 0;
+
+            //if no folder to sort chosen yet then do nothing
+            if(sourceDirectory == null)
+            {
+                MessageBox.Show("No folder path has been specified to sort, please choose one before sorting...");
+
+                return;
+            }
             
             //string message for confirmation window
             string confirmationMessage;
