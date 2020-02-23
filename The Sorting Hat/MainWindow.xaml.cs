@@ -196,31 +196,38 @@ namespace The_Sorting_Hat
         /// <param name="e"></param>
         private void StartSortingBtn_Click(object sender, RoutedEventArgs e)
         {
-            totalPositions = (int)NumberOfPosition.Value;
-            folderPosition = 0;
+            try
+            {
+                totalPositions = (int)NumberOfPosition.Value;
+                folderPosition = 0;
 
-            //if no folder to sort chosen yet then do nothing
-            if(sourceDirectory == null)
+                //if no folder to sort chosen yet then do nothing
+                if(sourceDirectory == null)
+                {
+                    //MessageBox.Show("No folder path has been specified to sort, please choose one before sorting...");
+                    throw new NullReferenceException(); //source directory is null
+                }
+                
+                //string message for confirmation window
+                string confirmationMessage;
+                string template = "Are you sure that you want to sort {0} positions?";
+                string data = totalPositions.ToString();
+                confirmationMessage = string.Format(template, data);
+
+                //confirmation window to make sure user wants to sort so no missorts
+                MessageBoxResult messageBoxResult = MessageBox.Show(confirmationMessage, "Confirmation", MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    sortingWork.RunWorkerAsync();
+                } 
+
+                StartSortingBtn.IsEnabled = false;
+                CancelSortingBtn.IsEnabled = true;
+            }
+            catch(NullReferenceException ex)
             {
                 MessageBox.Show("No folder path has been specified to sort, please choose one before sorting...");
-                return;
             }
-            
-            //string message for confirmation window
-            string confirmationMessage;
-            string template = "Are you sure that you want to sort {0} positions?";
-            string data = totalPositions.ToString();
-            confirmationMessage = string.Format(template, data);
-
-            //confirmation window to make sure user wants to sort so no missorts
-            MessageBoxResult messageBoxResult = MessageBox.Show(confirmationMessage, "Confirmation", MessageBoxButton.YesNo);
-            if (messageBoxResult == MessageBoxResult.Yes)
-            {
-                sortingWork.RunWorkerAsync();
-            } 
-
-            StartSortingBtn.IsEnabled = false;
-            CancelSortingBtn.IsEnabled = true;
         }
 
         /// <summary>
