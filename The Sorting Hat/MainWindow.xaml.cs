@@ -22,11 +22,11 @@ namespace The_Sorting_Hat
     /// </summary>
     public partial class MainWindow : Window
     {
-        int totalPositions = 0;
-        int folderPosition;
-        int totalPhotos;
-        BackgroundWorker sortingWork = new BackgroundWorker();
-        string sourceDirectory;
+        int totalPositions = 0; //number of positions to be sorted
+        int folderPosition; 
+        int totalPhotos; //number of photos in source directory
+        BackgroundWorker sortingWork = new BackgroundWorker(); //background thread for sorting 
+        string sourceDirectory; //the path to the directory being sorted
 
         public MainWindow()
         {
@@ -34,9 +34,12 @@ namespace The_Sorting_Hat
 
             initializeBackgroundWorker();
 
-            SortingProgressBar.Value = -1;
+            SortingProgressBar.Value = -1; //resetting progess bar to empty
         }
 
+        /// <summary>
+        /// Initializing background worker thread for sorting work
+        /// </summary>
         private void initializeBackgroundWorker()
         {
             sortingWork.DoWork += SortingWork_DoWork;
@@ -46,11 +49,20 @@ namespace The_Sorting_Hat
             sortingWork.WorkerSupportsCancellation = true;
         }
 
+        /// <summary>
+        /// Updates progress bar about progress of sorting 
+        /// </summary>
         private void SortingWork_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             SortingProgressBar.Value = e.ProgressPercentage;
         }
 
+        /// <summary>
+        /// What is displayed after background thread completes, ends in error, or is cancelled. If completed, dialog box saying completed is displayed 
+        /// and progress bar is reset. Cancel and start buttons are enabled/disabled respectively
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SortingWork_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if(e.Error != null)
@@ -74,6 +86,10 @@ namespace The_Sorting_Hat
             }
         }
 
+        /// <summary>
+        /// Work thread of sorting. First finds total number of photos. Then makes folders in target directory based on number of positions chosen by user.
+        /// Those folders are put into an array that is iterated through for each photo (because recorded in sequential order).
+        /// </summary>
         private void SortingWork_DoWork(object sender, DoWorkEventArgs e)
         {
             int numFilesCompleted = 0;
@@ -93,15 +109,13 @@ namespace The_Sorting_Hat
                 }
 
                 DirectoryInfo di = Directory.CreateDirectory(sourceDirectory + "\\Position" + (i +1));
-
-                Console.WriteLine("Position directory was created successfully at {0}.", DateTime.Now);
             }
 
             //list of all folders in source directory
             var dirPaths = Directory.GetDirectories(sourceDirectory).OrderBy(d => new DirectoryInfo(d).CreationTime); //sorted by creation time
             string[] dirPath = dirPaths.ToArray();
 
-            //Go through first set and make new directories for each pot
+            //sorts photos by moving
             foreach (string currentFile in pngFiles)
             { 
                 //check for cancellation
@@ -134,8 +148,6 @@ namespace The_Sorting_Hat
                 numFilesCompleted++;
 
                 sortingWork.ReportProgress(CalcReportProgress(numFilesCompleted, totalPhotos));
-
-              //  Console.WriteLine("File was copy to {0} from {1}", destFile, sourceDirectory);
             }
 
 
@@ -144,8 +156,6 @@ namespace The_Sorting_Hat
         /// <summary>
         /// Finds folder path from dialog window search and sets source directory for sorting to it
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SourceDirectoryFolderSelectionBtn_Click(object sender, RoutedEventArgs e)
         {
             string folderResult = GetFolderResult();
@@ -178,6 +188,12 @@ namespace The_Sorting_Hat
             }
         }
 
+        /// <summary>
+        /// When Start Sorting Button is clicked. Checks for if folder for sorting is collected yet. Then user confirms it.
+        /// Background worker sorter is started.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartSortingBtn_Click(object sender, RoutedEventArgs e)
         {
             totalPositions = (int)NumberOfPosition.Value;
@@ -187,7 +203,6 @@ namespace The_Sorting_Hat
             if(sourceDirectory == null)
             {
                 MessageBox.Show("No folder path has been specified to sort, please choose one before sorting...");
-
                 return;
             }
             
@@ -208,6 +223,9 @@ namespace The_Sorting_Hat
             CancelSortingBtn.IsEnabled = true;
         }
 
+        /// <summary>
+        /// Cancels sorting operation during sorting
+        /// </summary>
         private void CancelSortingBtn_Click(object sender, RoutedEventArgs e)
         {
             sortingWork.CancelAsync();
@@ -216,6 +234,12 @@ namespace The_Sorting_Hat
             StartSortingBtn.IsEnabled = true;
         }
 
+        /// <summary>
+        /// Calculates the percentage of progress made by sorting
+        /// </summary>
+        /// <param name="workDone">The number of photos sorted already</param>
+        /// <param name="workTotal">The total number of photos to sort still</param>
+        /// <returns></returns>
         private int CalcReportProgress(int workDone, int workTotal)
         {
             int workCompleted = (int)(((float)workDone) / ((float)workTotal) * 100);
