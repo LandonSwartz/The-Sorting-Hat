@@ -182,8 +182,19 @@ namespace The_Sorting_Hat
         {
             totalPositions = (int)NumberOfPosition.Value;
             folderPosition = 0;
+            
+            //string message for confirmation window
+            string confirmationMessage;
+            string template = "Are you sure that you want to sort {0} positions?";
+            string data = totalPositions.ToString();
+            confirmationMessage = string.Format(template, data);
 
-            sortingWork.RunWorkerAsync();
+            //confirmation window to make sure user wants to sort so no missorts
+            MessageBoxResult messageBoxResult = MessageBox.Show(confirmationMessage, "Confirmation", MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                sortingWork.RunWorkerAsync();
+            } 
 
             StartSortingBtn.IsEnabled = false;
             CancelSortingBtn.IsEnabled = true;
