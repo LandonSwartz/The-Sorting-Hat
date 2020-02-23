@@ -204,7 +204,6 @@ namespace The_Sorting_Hat
                 //if no folder to sort chosen yet then do nothing
                 if(sourceDirectory == null)
                 {
-                    //MessageBox.Show("No folder path has been specified to sort, please choose one before sorting...");
                     throw new NullReferenceException(); //source directory is null
                 }
                 
@@ -219,14 +218,20 @@ namespace The_Sorting_Hat
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
                     sortingWork.RunWorkerAsync();
+
+                    StartSortingBtn.IsEnabled = false;
+                    CancelSortingBtn.IsEnabled = true;
                 } 
 
-                StartSortingBtn.IsEnabled = false;
-                CancelSortingBtn.IsEnabled = true;
+                
             }
-            catch(NullReferenceException ex)
+            catch(NullReferenceException)
             {
                 MessageBox.Show("No folder path has been specified to sort, please choose one before sorting...");
+            }
+            catch(Exception)
+            {
+
             }
         }
 
