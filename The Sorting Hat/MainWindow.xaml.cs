@@ -54,11 +54,11 @@ namespace The_Sorting_Hat
         /// <param name="e"></param>
         private void SortingWork_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if(e.Error != null)
+            if(e.Error != null) // if error message occurred
             {
                 MessageBox.Show(e.Error.Message);
             }
-            else if(e.Cancelled)
+            else if(e.Cancelled) //if background work was cancelled
             {
                 MessageBox.Show("Sorting was cancelled");
 
