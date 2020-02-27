@@ -43,7 +43,14 @@ namespace The_Sorting_Hat
         /// </summary>
         private void SortingWork_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            SortingProgressBar.Value = e.ProgressPercentage;
+            try
+            {
+                SortingProgressBar.Value = e.ProgressPercentage;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         /// <summary>
@@ -147,14 +154,22 @@ namespace The_Sorting_Hat
         /// </summary>
         private void SourceDirectoryFolderSelectionBtn_Click(object sender, RoutedEventArgs e)
         {
-            string folderResult = GetFolderResult();
-
-            if (folderResult != null) //if user chose something
+            try
             {
-                sourceDirectory = folderResult;
+                string folderResult = GetFolderResult();
 
-                SourceDirectoryPathTextBox.Text = folderResult; //set text to folder path
+                if (folderResult != null) //if user chose something
+                {
+                   sourceDirectory = folderResult;
+
+                   SourceDirectoryPathTextBox.Text = folderResult; //set text to folder path
+                }
             }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
 
         /// <summary>
@@ -218,9 +233,9 @@ namespace The_Sorting_Hat
             {
                 MessageBox.Show("No folder path has been specified to sort, please choose one before sorting...");
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -231,8 +246,15 @@ namespace The_Sorting_Hat
         {
             sortingWork.CancelAsync();
 
-            CancelSortingBtn.IsEnabled = false;
-            StartSortingBtn.IsEnabled = true;
+            try
+            {
+                CancelSortingBtn.IsEnabled = false;
+                StartSortingBtn.IsEnabled = true;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         /// <summary>
@@ -243,8 +265,27 @@ namespace The_Sorting_Hat
         /// <returns></returns>
         private int CalcReportProgress(int workDone, int workTotal)
         {
-            int workCompleted = (int)(((float)workDone) / ((float)workTotal) * 100);
-            return workCompleted;
+            try
+            {
+                if(workTotal == 0)
+                {
+                    throw new DivideByZeroException();
+                }
+
+                int workCompleted = (int)(((float)workDone) / ((float)workTotal) * 100);
+                return workCompleted;
+            }
+            catch(DivideByZeroException)
+            {
+                MessageBox.Show("Error in processing progress bar");
+                return -1; //resets progress bar
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Progress Bar failed to update because:" + ex.Message);
+                return -1;
+            }
+            
         }
     }
 }
